@@ -17,6 +17,10 @@ namespace Gollo.Models
         [Required]
         public string ProductoInteres { get; set; }
 
+        [Required]
         public string Mensaje { get; set; }
+
+        [Required]
+        public string TieneCredigollo { get; set; } // Nuevo campo
     }
 }

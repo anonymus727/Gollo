@@ -1,0 +1,100 @@
+﻿@model Gollo.Models.FormularioModel
+
+@{
+    ViewData["Title"] = "Contacto";
+}
+
+<h1 class="text-center mb-4">Formulario de Contacto</h1>
+
+@if (TempData["MensajeExito"] != null)
+{
+    <div class="alert alert-success text-center">
+        <i class="bi bi-check-circle-fill"></i>
+        @TempData["MensajeExito"]
+    </div>
+}
+@if (TempData["MensajeError"] != null)
+{
+    <div class="alert alert-danger text-center">
+        <i class="bi bi-exclamation-triangle-fill"></i>
+        @TempData["MensajeError"]
+    </div>
+}
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <form asp-controller="Formulario" asp-action="EnviarFormulario" method="post" class="bg-white p-4 rounded shadow-sm">
+            <div class="row g-3">
+                <!-- Nombre -->
+                <div class="col-md-6">
+                    <label asp-for="Nombre" class="form-label">Nombre <span class="text-danger">*</span></label>
+                    <input asp-for="Nombre" class="form-control" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+
+                <!-- Correo -->
+                <div class="col-md-6">
+                    <label asp-for="Correo" class="form-label">Correo electrónico <span class="text-danger">*</span></label>
+                    <input asp-for="Correo" type="email" class="form-control" />
+                    <span asp-validation-for="Correo" class="text-danger"></span>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="col-md-6">
+                    <label asp-for="Telefono" class="form-label">Teléfono <span class="text-danger">*</span></label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+
+                <!-- ¿Tiene Credigollo? -->
+                <div class="col-md-6">
+                    <label asp-for="TieneCredigollo" class="form-label">¿Tiene Crédito en Gollo? <span class="text-danger">*</span></label>
+                    <select asp-for="TieneCredigollo" class="form-select">
+                        <option value="">-- Seleccione una opción --</option>
+                        <option>Sí</option>
+                        <option>No</option>
+                    </select>
+                    <span asp-validation-for="TieneCredigollo" class="text-danger"></span>
+                </div>
+
+                <!-- Producto de interés -->
+                <div class="col-md-12">
+                    <label asp-for="ProductoInteres" class="form-label">Producto de Interés <span class="text-danger">*</span></label>
+                    <select asp-for="ProductoInteres" class="form-select">
+                        <option value="">-- Seleccione un producto --</option>
+                        <option>Celulares</option>
+                        <option>Pantallas</option>
+                        <option>Línea Blanca</option>
+                        <option>Muebles</option>
+                        <option>Laptops</option>
+                        <option>Audífonos</option>
+                        <option>Electrodomésticos</option>
+                        <option>Accesorios de Cocina</option>
+                        <option>Prestamo de Dinero</option>
+                        <option>Viajes con Gollo</option>
+                        <option>Otros (Especifique)</option>
+                    </select>
+                    <span asp-validation-for="ProductoInteres" class="text-danger"></span>
+                </div>
+
+                <!-- Mensaje -->
+                <div class="col-12">
+                    <label asp-for="Mensaje" class="form-label">Mensaje <span class="text-danger">*</span></label>
+                    <textarea asp-for="Mensaje" class="form-control" rows="5"></textarea>
+                    <span asp-validation-for="Mensaje" class="text-danger"></span>
+                </div>
+
+                <!-- Botón Enviar -->
+                <div class="col-12 text-center">
+                    <button type="submit" class="btn btn-primary px-5 py-2">
+                        Enviar
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

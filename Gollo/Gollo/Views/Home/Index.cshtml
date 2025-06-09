@@ -1,54 +1,15 @@
-﻿@model Gollo.Models.FormularioModel
-
-@{
-    ViewData["Title"] = "Formulario de contacto";
+﻿@{
+    ViewData["Title"] = "Inicio";
 }
 
-<h1>Formulario de Contacto Gollo</h1>
-
-<form asp-action="Index" method="post" class="contact-form">
-    <div class="form-group">
-        <label asp-for="Nombre"></label>
-        <input asp-for="Nombre" class="form-control" />
-        <span asp-validation-for="Nombre" class="text-danger"></span>
+<div class="container main-content d-flex flex-column justify-content-center align-items-center">
+    <div class="row w-100">
+        <div class="col-md-8 col-lg-6 mx-auto">
+            <div class="content-card text-center bg-white p-4 rounded shadow-lg">
+                <h1 class="display-4">Bienvenido a Gollo Los Ángeles</h1>
+                <p class="lead">¡Gracias por visitarnos! Aquí puedes ponerte en contacto con nosotros fácilmente.</p>
+                <a class="btn btn-warning btn-lg mt-3" asp-controller="Home" asp-action="Contacto">Ir al formulario de contacto</a>
+            </div>
+        </div>
     </div>
-
-    <div class="form-group">
-        <label asp-for="Correo"></label>
-        <input asp-for="Correo" class="form-control" />
-        <span asp-validation-for="Correo" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Telefono"></label>
-        <input asp-for="Telefono" class="form-control" />
-        <span asp-validation-for="Telefono" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ProductoInteres"></label>
-        <select asp-for="ProductoInteres" class="form-control">
-            <option value="">-- Seleccione un producto --</option>
-            <option>Hogar</option>
-            <option>Electrodomésticos</option>
-            <option>Muebles</option>
-            <option>Línea Blanca</option>
-            <option>Otro</option>
-        </select>
-        <span asp-validation-for="ProductoInteres" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Mensaje"></label>
-        <textarea asp-for="Mensaje" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Mensaje" class="text-danger"></span>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
-
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-}
+</div>
