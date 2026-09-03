@@ -1,60 +1,65 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Net.Mail;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Net.Mail;
 using Gollo.Models;
 
 namespace Gollo.Controllers
 {
     public class FormularioController : Controller
     {
-        // GET: /Formulario/
-        public IActionResult Index()
-        {
-            return View();
-        }
+        public IActionResult Index() => View();
 
-        // POST: /Formulario/
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Index(FormularioModel modelo)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    string cuerpo = $"Nombre: {modelo.Nombre}\n" +
-                                    $"Correo: {modelo.Correo}\n" +
-                                    $"Teléfono: {modelo.Telefono}\n" +
-                                    $"Producto de interés: {modelo.ProductoInteres}\n" +
-                                    $"Mensaje adicional: {modelo.Mensaje}";
-
-                    MailMessage correo = new MailMessage();
-                    correo.From = new MailAddress("venomaucer@gmail.com");
-                    correo.To.Add("venomaucer@gmail.com");
-                    correo.Subject = "Nuevo formulario enviado desde la web";
-                    correo.Body = cuerpo;
-                    correo.IsBodyHtml = false;
-
-                    SmtpClient smtp = new SmtpClient("smtp.gmail.com", 587);
-                    smtp.Credentials = new NetworkCredential("venomaucer@gmail.com", "ekby qrjt yrfg gmbl");
-                    smtp.EnableSsl = true;
-
-                    smtp.Send(correo);
-
-                    ViewBag.Exito = "Formulario enviado correctamente. Revisa tu correo.";
-                    ModelState.Clear(); // Limpia el formulario
-                }
-                catch (Exception ex)
-                {
-                    ViewBag.Error = $"Error al enviar el formulario: {ex.Message}";
-                }
-            }
-            else
-            {
-                ViewBag.Error = "Por favor completa todos los campos requeridos.";
+                ViewBag.Error = "Por favor completa correctamente todos los campos requeridos.";
+                return View(modelo);
             }
 
-            return View();
+            try
+            {
+                var smtpUser = Environment.GetEnvironmentVariable("GOLLO_SMTP_USER");
+                var smtpPassword = Environment.GetEnvironmentVariable("GOLLO_SMTP_PASSWORD");
+
+                if (string.IsNullOrWhiteSpace(smtpUser) || string.IsNullOrWhiteSpace(smtpPassword))
+                {
+                    ViewBag.Error = "El servicio de correo no está configurado. Contacta al administrador.";
+                    return View(modelo);
+                }
+
+                string cuerpo = $"Nombre: {modelo.Nombre}\n" +
+                                $"Cédula: {modelo.Cedula}\n" +
+                                $"Teléfono: {modelo.Telefono}\n" +
+                                $"Categoría de producto: {modelo.CategoriaProducto}\n" +
+                                $"Producto específico: {modelo.ProductoEspecifico}\n" +
+                                $"Mensaje adicional: {modelo.Mensaje}";
+
+                using var correo = new MailMessage();
+                correo.From = new MailAddress(smtpUser);
+                correo.To.Add(smtpUser);
+                correo.Subject = "Nueva solicitud desde la web de Gollo Los Angeles";
+                correo.Body = cuerpo;
+                correo.IsBodyHtml = false;
+
+                using var smtp = new SmtpClient("smtp.gmail.com", 587)
+                {
+                    Credentials = new NetworkCredential(smtpUser, smtpPassword),
+                    EnableSsl = true
+                };
+
+                smtp.Send(correo);
+                ViewBag.Exito = "Formulario enviado correctamente. Revisa tu correo.";
+                ModelState.Clear();
+                return View();
+            }
+            catch
+            {
+                ViewBag.Error = "No se pudo enviar el formulario. Verifica la configuración del correo e inténtalo nuevamente.";
+                return View(modelo);
+            }
         }
     }
 }

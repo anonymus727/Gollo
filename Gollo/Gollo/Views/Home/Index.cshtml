@@ -1,4 +1,4 @@
-﻿@model Gollo.Models.FormularioModel
+@model Gollo.Models.FormularioModel
 
 @{
     ViewData["Title"] = "Formulario de contacto";
@@ -6,49 +6,77 @@
 
 <h1>Formulario de Contacto Gollo</h1>
 
-<form asp-action="Index" method="post" class="contact-form">
+@if (ViewBag.Exito != null)
+{
+    <div class="alert alert-success" role="alert">@ViewBag.Exito</div>
+}
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger" role="alert">@ViewBag.Error</div>
+}
+
+<form asp-action="Index" method="post" class="contact-form" novalidate>
+    @Html.AntiForgeryToken()
+
     <div class="form-group">
         <label asp-for="Nombre"></label>
-        <input asp-for="Nombre" class="form-control" />
+        <input asp-for="Nombre" class="form-control" autocomplete="name" />
         <span asp-validation-for="Nombre" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Correo"></label>
-        <input asp-for="Correo" class="form-control" />
-        <span asp-validation-for="Correo" class="text-danger"></span>
+        <label asp-for="Cedula"></label>
+        <input asp-for="Cedula" class="form-control" inputmode="numeric" maxlength="9" autocomplete="off" placeholder="Ej. 109990999" />
+        <span asp-validation-for="Cedula" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Telefono"></label>
-        <input asp-for="Telefono" class="form-control" />
+        <input asp-for="Telefono" class="form-control" inputmode="tel" autocomplete="tel" />
         <span asp-validation-for="Telefono" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ProductoInteres"></label>
-        <select asp-for="ProductoInteres" class="form-control">
-            <option value="">-- Seleccione un producto --</option>
-            <option>Hogar</option>
-            <option>Electrodomésticos</option>
-            <option>Muebles</option>
-            <option>Línea Blanca</option>
-            <option>Otro</option>
+        <label asp-for="CategoriaProducto"></label>
+        <select asp-for="CategoriaProducto" class="form-control" id="CategoriaProducto">
+            <option value="">-- Seleccione una categoría --</option>
+            <option value="Línea Blanca">Línea Blanca</option>
+            <option value="Electrodomésticos">Electrodomésticos</option>
+            <option value="Tecnología">Tecnología</option>
+            <option value="Celulares">Celulares</option>
+            <option value="Audio y Video">Audio y Video</option>
+            <option value="Muebles">Muebles</option>
+            <option value="Hogar">Hogar</option>
+            <option value="Otros">Otros</option>
         </select>
-        <span asp-validation-for="ProductoInteres" class="text-danger"></span>
+        <span asp-validation-for="CategoriaProducto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProductoEspecifico"></label>
+        <input asp-for="ProductoEspecifico" class="form-control" maxlength="200" placeholder="Ej. Refrigeradora Samsung de 14 pies" />
+        <span asp-validation-for="ProductoEspecifico" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label asp-for="Mensaje"></label>
-        <textarea asp-for="Mensaje" class="form-control" rows="4"></textarea>
+        <textarea asp-for="Mensaje" class="form-control" rows="4" placeholder="Información adicional (opcional)"></textarea>
         <span asp-validation-for="Mensaje" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Enviar</button>
+    <button type="submit" class="btn btn-primary">Enviar solicitud</button>
 </form>
 
 @section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const cedula = document.getElementById('Cedula');
+            if (cedula) {
+                cedula.addEventListener('input', function () {
+                    this.value = this.value.replace(/\D/g, '').slice(0, 9);
+                });
+            }
+        });
+    </script>
 }
